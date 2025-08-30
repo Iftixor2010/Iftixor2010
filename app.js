@@ -1,63 +1,39 @@
-// app.js
+/* ------ ko'p ishlatilinadigan string metodlari ------ */
 
-const form = document.querySelector("#change-location");
-const card = document.querySelector("#card");
-const details = document.querySelector("#details");
-const icon = document.querySelector("#weather-icon");
-const overlay = document.querySelector("#overlay");
+let email = 'akhrorweb@gmail.com'
 
-const apiKey = "dd412ccab9257a81ba083972c53adce6"; 
+// lastIndeOf()
+/*let result = email.lastIndexOf('o')
+console.log(result) */
+// indexOf
 
-// ob-havoni shahar bo‘yicha olish
-async function getWeather(city) {
-  const base = "https://api.openweathermap.org/data/2.5/weather";
-  const query = `?q=${city}&units=metric&appid=${apiKey}`;
-  const response = await fetch(base + query);
-  if (!response.ok) {
-    throw new Error("Shahar topilmadi");
-  }
-  const data = await response.json();
-  return data;
-}
+// slice()
+/*;('0a1k2h3r4o5r6w7e8b9@10gmail.com')
+let result = email.slice(10)
+console.log(result) */
 
-// UI yangilash
-function updateUI(data) {
-  const { name, weather, main } = data;
+// substr()
+// let result = email.substr(1, 9).length
+// console.log(result)
 
-  details.innerHTML = `
-    <h5 class="mb-3">${name}</h5>
-    <p class="mb-3">${weather[0].description.toUpperCase()}</p>
-    <div class="display-4 mb-3">
-      <span>${Math.round(main.temp)}</span>
-      <span>&deg;C</span>
-    </div>
-  `;
+// replace()
+// let result = email.replace('a', 'd')
+// console.log(result)
 
-  // ob-havo iconi
-  const iconSrc = `https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
-  icon.setAttribute("src", iconSrc);
+// charAt() - birinchi harakterni olib beradi
+// let result = email.charAt()
+// console.log(result)
 
-  card.classList.remove("d-none");
-}
+// toUpperCase() - toLowerCase()
 
-// formni tinglash
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  const city = form.city.value.trim();
+// let result = email.toLowerCase()
+// console.log(result)
 
-  overlay.classList.remove("d-none"); 
-  getWeather(city)
-    .then((data) => {
-      updateUI(data);
-      overlay.classList.add("d-none");
-    })
-    .catch((err) => {
-      overlay.classList.add("d-none");
-      alert(err.message);
-    });
-    
+// trim()
 
-  form.reset();
-});
+// let result = email.trim()
+// console.log(result.length, email.length)
 
-
+// split()
+// let result = email.split('a')
+// console.log(result)
