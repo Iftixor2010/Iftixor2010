@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <style>
+        html {
+            box-sizing: border-box;
+            height: 100%;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            align-items: center;
+            background: linear-gradient(320deg, #eb92be, #ffef78, #63c9b4);
+            display: flex;
+            font-family: 'Dosis', sans-serif;
+            font-display: swap;
+            height: inherit;
+            justify-content: center;
+        }
+
+        .wrapper {
+            backdrop-filter: blur(5.5px);
+            -webkit-backdrop-filter: blur(5.5px);
+            border: 1px solid rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(35, 35, 35, 0.1);
+            color: #232323;
+            background: rgba(255, 255, 255, 0.30);
+            flex-basis: 400px;
+            height: 540px;
+            padding: 20px 35px;
+        }
+
+        .screen {
+            backdrop-filter: blur(5.5px);
+            -webkit-backdrop-filter: blur(5.5px);
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(35, 35, 35, 0.1);
+            color: #232323;
+            font-size: 35px;
+            overflow: auto;
+            padding: 20px;
+            text-align: right;
+            width: 326px;
+        }
+
+        .calc-button-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5% 0;
+        }
+
+        .calc-button {
+            backdrop-filter: blur(5.5px);
+            -webkit-backdrop-filter: blur(5.5px);
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.01);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(35, 35, 35, 0.1);
+            color: #232323;
+            flex-basis: 20%;
+            font-family: inherit;
+            font-size: 24px;
+            height: 65px;
+        }
+
+        .calc-button:last-child {
+            color: #fff;
+            background: #d72880;
+        }
+
+        .calc-button:last-child:hover {
+            background-color: inherit;
+            color: inherit;
+        }
+
+        .calc-button:hover {
+            background-color: inherit;
+        }
+
+        .calc-button:active {
+            background-color: #ffef78;
+        }
+
+        .double {
+            flex-basis: 47%;
+        }
+
+        .triple {
+            flex-basis: 47%;
+        }
+
+        .pi-button {
+            flex-basis: 20%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <section class="screen" id="display">
+            0
+        </section>
+
+        <section class="calc-buttons">
+            <div class="calc-button-row">
+                <button class="calc-button double" onclick="buttonClick('C')">C</button>
+                <button class="calc-button" onclick="buttonClick('←')">&larr;</button>
+                <button class="calc-button" onclick="buttonClick('÷')">&divide;</button>
+            </div>
+
+            <div class="calc-button-row">
+                <button class="calc-button" onclick="buttonClick('7')">7</button>
+                <button class="calc-button" onclick="buttonClick('8')">8</button>
+                <button class="calc-button" onclick="buttonClick('9')">9</button>
+                <button class="calc-button" onclick="buttonClick('×')">&times;</button>
+            </div>
+
+            <div class="calc-button-row">
+                <button class="calc-button" onclick="buttonClick('4')">4</button>
+                <button class="calc-button" onclick="buttonClick('5')">5</button>
+                <button class="calc-button" onclick="buttonClick('6')">6</button>
+                <button class="calc-button" onclick="buttonClick('−')">&minus;</button>
+            </div>
+
+            <div class="calc-button-row">
+                <button class="calc-button" onclick="buttonClick('1')">1</button>
+                <button class="calc-button" onclick="buttonClick('2')">2</button>
+                <button class="calc-button" onclick="buttonClick('3')">3</button>
+                <button class="calc-button" onclick="buttonClick('+')">&plus;</button>
+            </div>
+
+            <div class="calc-button-row">
+                <button class="calc-button pi-button" onclick="buttonClick('π')">π</button>
+                <button class="calc-button triple" onclick="buttonClick('0')">0</button>
+                <button class="calc-button" onclick="buttonClick('=')">&equals;</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let runningTotal = 0;
+        let buffer = "0";
+        let expression = "";
+        let previousOperator = null;
+        let operatorInMemory = null;
+        let piDisplayed = false;
+
+        const screen = document.querySelector('#display');
+        const piValue = "3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141273";
+
+        function buttonClick(value) {
+            if (isNaN(value)) {
+                handleSymbol(value);
+            } else {
+                handleNumber(value);
+            }
+            screen.innerText = expression || "0";
+        }
+
+        function handleNumber(number) {
+            if (buffer === "0" || piDisplayed) {
+                buffer = number;
+                piDisplayed = false;
+            } else {
+                buffer += number;
+            }
+            expression += number;
+        }
+
+        function handleSymbol(symbol) {
+            switch (symbol) {
+                case 'C':
+                    buffer = '0';
+                    runningTotal = 0;
+                    previousOperator = null;
+                    operatorInMemory = null;
+                    expression = "";
+                    piDisplayed = false;
+                    break;
+                case '←':
+                    if (piDisplayed) {
+                        buffer = "0";
+                        expression = expression.slice(0, -piValue.length);
+                        piDisplayed = false;
+                    } else if (buffer.length === 1) {
+                        buffer = "0";
+                        expression = expression.slice(0, -1);
+                    } else {
+                        buffer = buffer.substring(0, buffer.length - 1);
+                        expression = expression.slice(0, -1);
+                    }
+                    break;
+                case '=':
+                    if (previousOperator === null) {
+                        return;
+                    }
+                    flushOperation(parseFloat(buffer));
+                    previousOperator = null;
+                    buffer = runningTotal.toString();
+                    expression = buffer;
+                    break;
+                case '÷':
+                case '×':
+                case '−':
+                case '+':
+                    handleMath(symbol);
+                    expression += symbol;
+                    break;
+                case 'π':
+                    buffer = piValue;
+                    expression += piValue;
+                    piDisplayed = true;
+                    break;
+            }
+        }
+
+        function handleMath(symbol) {
+            if (buffer === "0" && !piDisplayed) {
+                return;
+            }
+
+            const floatBuffer = parseFloat(buffer);
+
+            if (runningTotal === 0) {
+                runningTotal = floatBuffer;
+            } else {
+                flushOperation(floatBuffer);
+            }
+
+            previousOperator = symbol;
+            buffer = "";
+        }
+
+        function flushOperation(floatBuffer) {
+            if (previousOperator === "+") {
+                runningTotal += floatBuffer;
+            } else if (previousOperator === "−") {
+                runningTotal -= floatBuffer;
+            } else if (previousOperator === "×") {
+                runningTotal *= floatBuffer;
+            } else if (previousOperator === "÷") {
+                runningTotal /= floatBuffer;
+            }
+        }
+    </script>
+</body>
+
+</html>
